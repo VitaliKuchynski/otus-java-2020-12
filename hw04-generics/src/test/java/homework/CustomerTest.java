@@ -1,6 +1,5 @@
 package homework;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,6 @@ class CustomerTest {
     }
 
     @Test
-   // @Disabled //эту аннотацию надо убрать
     @DisplayName("Сортировка по полю score, итерация по возрастанию")
     void scoreSortingTest() {
         //given
@@ -99,7 +97,6 @@ class CustomerTest {
     }
 
     @Test
-    //@Disabled //эту аннотацию надо убрать
     @DisplayName("Возвращание в обратном порядке")
     void reverseOrderTest() {
         //given
