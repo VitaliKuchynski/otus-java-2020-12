@@ -1,10 +1,7 @@
 package homework;
 
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class CustomerService {
 
@@ -14,7 +11,10 @@ public class CustomerService {
 
     public Map.Entry<Customer, String> getSmallest() {
         //Возможно, чтобы реализовать этот метод, потребуется посмотреть как Map.Entry сделан в jdk
-        return customersMap.firstEntry();
+        Map.Entry<Customer, String> currentEntry = customersMap.firstEntry();
+        Customer copyCustomer = new Customer(currentEntry.getKey());
+
+        return new AbstractMap.SimpleEntry<>(copyCustomer, currentEntry.getValue());
     }
 
     public Map.Entry<Customer, String> getNext(Customer customer) {

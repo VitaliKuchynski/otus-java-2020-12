@@ -13,6 +13,12 @@ public class Customer  {
         this.scores = scores;
     }
 
+    public Customer(Customer customer){
+        this.id = customer.id;
+        this.name = customer.name;
+        this.scores = customer.scores;
+    }
+
     public long getId() {
         return id;
     }
@@ -22,7 +28,7 @@ public class Customer  {
     }
 
     public void setName(String name) {
-        // this.name = name;
+         this.name = name;
     }
 
     public long getScores() {
