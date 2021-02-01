@@ -1,6 +1,8 @@
 package ru.otus.reflection;
 
-import ru.otus.reflection.annotations.*;
+import ru.otus.reflection.annotations.After;
+import ru.otus.reflection.annotations.Before;
+import ru.otus.reflection.annotations.Test;
 
 public class ClassTest {
 
@@ -29,7 +31,5 @@ public class ClassTest {
     public void tearDown() {
         System.out.println("Close test  ----- ");
     }
-
-
 
 }
