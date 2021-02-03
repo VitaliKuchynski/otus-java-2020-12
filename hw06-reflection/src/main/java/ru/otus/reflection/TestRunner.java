@@ -14,70 +14,68 @@ public class TestRunner {
     private int passedTest = 0;
     private int failedTest = 0;
 
-    private final List<Method> beforeList = new ArrayList<>();
-    private final List<Method> testList = new ArrayList<>();
-    private final List<Method> afterList = new ArrayList<>();
-
     public void runTestClass(Class<?> clazzTest) {
-        selectAnnotations(clazzTest);
         executeTests(clazzTest);
         printTestResults();
     }
 
     private void executeTests(Class<?> clazzTest) {
 
-        for (Method methodsTest : testList) {
+        for (Method methodsTest : selectAnnotatedMethods(clazzTest, Test.class)) {
 
-            Object testObj = null;
+            Object ob = createNewInstance(clazzTest);
 
-            try {
-                testObj = clazzTest.getDeclaredConstructor().newInstance();
-            } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-                e.printStackTrace();
-            }
+            for (Method methodsBefore : selectAnnotatedMethods(clazzTest, Before.class)) {
 
-            for (Method methodsBefore : beforeList) {
+                if (callMethod(methodsBefore, ob)) {
 
-                try {
-                    methodsBefore.invoke(testObj);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    break;
-                }
-
-                try {
-                    methodsTest.invoke(testObj);
-                    passedTest++;
-                } catch (Exception e) {
-                    failedTest++;
-                    e.printStackTrace();
+                    if (callMethod(methodsTest, ob)) {
+                        passedTest++;
+                    } else {
+                        failedTest++;
+                    }
                 }
             }
 
-            for (Method methodsAfter : afterList) {
-                try {
-                    methodsAfter.invoke(testObj);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            for (Method methodsAfter : selectAnnotatedMethods(clazzTest, After.class)) {
+                callMethod(methodsAfter, ob);
             }
         }
     }
 
-    private void selectAnnotations(Class<?> clazzTest) {
+    private boolean callMethod(Method method, Object obj) {
+        try {
+            method.invoke(obj);
+            return true;
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
+    private Object createNewInstance(Class<?> clazzTest) {
+        Object testObj = null;
+
+        try {
+            testObj = clazzTest.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return testObj;
+    }
+
+    private List<Method> selectAnnotatedMethods(Class<?> clazzTest, Class annotation) {
+        List<Method> methodList = new ArrayList<>();
         Method[] annotatedMethod = clazzTest.getDeclaredMethods();
 
         for (Method method : annotatedMethod) {
 
-            if (method.getAnnotation(Before.class) != null) {
-                beforeList.add(method);
-            } else if (method.getAnnotation(Test.class) != null) {
-                testList.add(method);
-            } else if (method.getAnnotation(After.class) != null) {
-                afterList.add(method);
+            if (method.getAnnotation(annotation) != null) {
+                methodList.add(method);
             }
+
         }
+        return methodList;
     }
 
     private void printTestResults() {
