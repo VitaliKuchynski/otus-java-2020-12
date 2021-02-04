@@ -24,16 +24,22 @@ public class TestRunner {
         for (Method methodsTest : selectAnnotatedMethods(clazzTest, Test.class)) {
 
             Object ob = createNewInstance(clazzTest);
+            boolean failed = false;
 
             for (Method methodsBefore : selectAnnotatedMethods(clazzTest, Before.class)) {
 
-                if (callMethod(methodsBefore, ob)) {
+                if (!callMethod(methodsBefore, ob)) {
+                    failed = true;
+                    break;
+                }
+            }
 
-                    if (callMethod(methodsTest, ob)) {
-                        passedTest++;
-                    } else {
-                        failedTest++;
-                    }
+            if(!failed){
+
+                if (callMethod(methodsTest, ob)) {
+                    passedTest++;
+                } else {
+                    failedTest++;
                 }
             }
 
