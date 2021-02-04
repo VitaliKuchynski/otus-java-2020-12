@@ -24,18 +24,9 @@ public class TestRunner {
         for (Method methodsTest : selectAnnotatedMethods(clazzTest, Test.class)) {
 
             Object ob = createNewInstance(clazzTest);
-            boolean failed = false;
+            boolean failed = callBeforeMethods(clazzTest, ob);
 
-            for (Method methodsBefore : selectAnnotatedMethods(clazzTest, Before.class)) {
-
-                if (!callMethod(methodsBefore, ob)) {
-                    failed = true;
-                    break;
-                }
-            }
-
-            if(!failed){
-
+            if (!failed) {
                 if (callMethod(methodsTest, ob)) {
                     passedTest++;
                 } else {
@@ -43,10 +34,25 @@ public class TestRunner {
                 }
             }
 
-            for (Method methodsAfter : selectAnnotatedMethods(clazzTest, After.class)) {
-                callMethod(methodsAfter, ob);
+            callAfterMethods(clazzTest, ob);
+        }
+    }
+
+    private void callAfterMethods(Class<?> clazz, Object ob) {
+
+        for (Method methodsAfter : selectAnnotatedMethods(clazz, After.class)) {
+            callMethod(methodsAfter, ob);
+        }
+    }
+
+    private boolean callBeforeMethods(Class<?> clazz, Object ob) {
+
+        for (Method methodsAfter : selectAnnotatedMethods(clazz, Before.class)) {
+            if (!callMethod(methodsAfter, ob)) {
+                return true;
             }
         }
+        return false;
     }
 
     private boolean callMethod(Method method, Object obj) {
