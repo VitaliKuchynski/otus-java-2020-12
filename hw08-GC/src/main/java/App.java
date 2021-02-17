@@ -20,7 +20,7 @@ public class App {
         ObjectName objName = new ObjectName("ru.otus:type=Generator");
         mBeanServer.registerMBean(generator, objName);
 
-        //generator.generateOOM();
+        generator.generateOOM();
         System.out.println("time:" + (System.currentTimeMillis() - beginTime) / 1000);
     }
 
