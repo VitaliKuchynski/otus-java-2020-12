@@ -2,4 +2,4 @@ rootProject.name = 'otus-java-2020-12'
 include 'hw01-gradle'
 include 'hw04-generics'
 include 'hw06-reflection'
-
+include 'hw08-GC'
