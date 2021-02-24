@@ -6,13 +6,15 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DynamicInvocationHandler implements InvocationHandler {
 
     private final TestLogInterface testLogInterface;
 
-    List<Method> methodList = selectAnnotatedMethods(TestLog.class, Log.class);
+    private Set<Method> methodList = selectAnnotatedMethods(TestLog.class, Log.class);
 
     public DynamicInvocationHandler(TestLogInterface testLog) {
         this.testLogInterface = testLog;
@@ -35,8 +37,8 @@ public class DynamicInvocationHandler implements InvocationHandler {
         return proxy;
     }
 
-    private List<Method> selectAnnotatedMethods(Class<?> clazzTest, Class annotation) {
-        methodList = new ArrayList<>();
+    private Set<Method> selectAnnotatedMethods(Class<?> clazzTest, Class annotation) {
+        methodList = new HashSet<>();
         Method[] annotatedMethod = clazzTest.getDeclaredMethods();
 
         for (Method method : annotatedMethod) {
