@@ -5,9 +5,7 @@ import ru.otus.annotations.Log;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class DynamicInvocationHandler implements InvocationHandler {
