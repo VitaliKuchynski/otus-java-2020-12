@@ -5,10 +5,14 @@ import ru.otus.annotations.Log;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DynamicInvocationHandler implements InvocationHandler {
 
     private final TestLogInterface testLogInterface;
+
+    List<Method> methodList = selectAnnotatedMethods(TestLog.class, Log.class);
 
     public DynamicInvocationHandler(TestLogInterface testLog) {
         this.testLogInterface = testLog;
@@ -22,12 +26,25 @@ public class DynamicInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-        if(method.isAnnotationPresent(Log.class)){
-            System.out.println("Invoked method: " + method);
-            return method.invoke(testLogInterface, args);
+        for(Method me: methodList){
+            if(method.getParameterCount() == me.getParameterCount() && me.getName().equals(method.getName())){
+                System.out.println("Invoked method: " + method);
+                return method.invoke(testLogInterface, args);
+            }
         }
-        System.out.println( "Unsupported method: " + method.getName() + " parameter counts: " + method.getParameterCount());
         return proxy;
+    }
+
+    private List<Method> selectAnnotatedMethods(Class<?> clazzTest, Class annotation) {
+        methodList = new ArrayList<>();
+        Method[] annotatedMethod = clazzTest.getDeclaredMethods();
+
+        for (Method method : annotatedMethod) {
+
+            if (method.getAnnotation(annotation) != null) {
+                methodList.add(method);
+            }
+        }
+        return methodList;
     }
 }
