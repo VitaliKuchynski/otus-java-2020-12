@@ -1,9 +1,20 @@
 package ru.otus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class App {
     public static void main(String[] args) {
 
-        ATM atm = new ATM();
+        List<Unit> unitList = new ArrayList<>();
+        unitList.add(new Unit(BanknoteValue.TWENTY));
+        unitList.add(new Unit(BanknoteValue.FIFTEEN));
+        unitList.add(new Unit(BanknoteValue.TEN));
+        unitList.add(new Unit(BanknoteValue.FIVE));
+        unitList.add(new Unit(BanknoteValue.TWO));
+        unitList.add(new Unit(BanknoteValue.ONE));
+
+        ATM atm = new ATM(unitList);
         atm.deposit(145);
         System.out.println(" Deposit-------------------------------------");
         for (Unit unit : atm.unitList) {

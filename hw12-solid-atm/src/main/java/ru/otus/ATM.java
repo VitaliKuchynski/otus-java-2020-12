@@ -1,31 +1,17 @@
 package ru.otus;
 
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ATM {
+public class ATM implements ATMInterface {
 
     List<Unit> unitList;
 
     private int balance;
 
-    ATM() {
-        unitList = new ArrayList<>();
-        Unit unitOne = new Unit(BanknoteValue.ONE);
-        Unit unitTwo = new Unit(BanknoteValue.TWO);
-        Unit unitFive = new Unit(BanknoteValue.FIVE);
-        Unit unitFifteen = new Unit(BanknoteValue.FIFTEEN);
-        Unit unitTen = new Unit(BanknoteValue.TEN);
-        Unit unitTwenty = new Unit(BanknoteValue.TWENTY);
-        unitList.add(unitTwenty);
-        unitList.add(unitFifteen);
-        unitList.add(unitTen);
-        unitList.add(unitFive);
-        unitList.add(unitTwo);
-        unitList.add(unitOne);
+    ATM(List<Unit> unitList) {
+        this.unitList = unitList;
     }
 
     public int withdrawal(int sum) {

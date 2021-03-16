@@ -3,7 +3,7 @@ package ru.otus;
 
 public class Unit {
 
-    private BanknoteValue banknoteValue;
+    private final BanknoteValue banknoteValue;
 
     private int count;
 
@@ -16,7 +16,12 @@ public class Unit {
     }
 
     public void addCount(int count) {
-        this.count += count;
+
+        if (count >= 0) {
+            this.count += count;
+        } else {
+            throw new RuntimeException("Incorrect count " + count);
+        }
     }
 
     public BanknoteValue getBanknoteValue() {
@@ -24,6 +29,11 @@ public class Unit {
     }
 
     public int extractCount(int count) {
-        return this.count -= count;
+
+        if (count >= 0) {
+            return this.count -= count;
+        } else {
+            throw new RuntimeException("Incorrect count " + count);
+        }
     }
 }
