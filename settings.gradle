@@ -3,5 +3,6 @@ include 'hw01-gradle'
 include 'hw04-generics'
 include 'hw06-reflection'
 include 'hw08-GC'
-include 'hw10-AutoLog'
+include 'hw10-autoLog'
+include 'hw12-solid-atm'
 
