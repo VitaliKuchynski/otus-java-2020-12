@@ -14,20 +14,20 @@ public class App {
         unitList.add(new Unit(BanknoteValue.TWO));
         unitList.add(new Unit(BanknoteValue.ONE));
 
-        ATM atm = new ATM(unitList);
-        atm.deposit(145);
+        ATMImpl atmImpl = new ATMImpl(unitList);
+        atmImpl.deposit(145);
         System.out.println(" Deposit-------------------------------------");
-        for (Unit unit : atm.unitList) {
+        for (Unit unit : atmImpl.unitList) {
             System.out.println(unit.getBanknoteValue().toString() + " " + " " + unit.getCount());
         }
 
         System.out.println(" Withdrawal -------------------------------------");
-        System.out.println(atm.withdrawal(65));
-        for (Unit unit : atm.unitList) {
+        System.out.println(atmImpl.withdrawal(65));
+        for (Unit unit : atmImpl.unitList) {
             System.out.println(unit.getBanknoteValue().toString() + " " + " " + unit.getCount());
         }
 
-        atm.printBalance();
+        atmImpl.printBalance();
     }
 }
 
