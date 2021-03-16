@@ -30,5 +30,7 @@ public class Demo {
         System.out.println("result:" + result);
 
         complexProcessor.removeListener(listenerPrinter);
+
+
     }
 }
