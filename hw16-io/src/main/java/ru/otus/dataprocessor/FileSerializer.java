@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class FileSerializer implements Serializer {
 
-    String fileName;
+    private final String fileName;
 
     public FileSerializer(String fileName) {
         this.fileName = fileName;

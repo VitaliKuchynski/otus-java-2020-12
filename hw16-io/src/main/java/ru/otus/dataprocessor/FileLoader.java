@@ -1,29 +1,30 @@
 package ru.otus.dataprocessor;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.otus.model.Measurement;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonReader;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FileLoader implements Loader {
 
-    private String fileName;
+    private final String fileName;
 
     public FileLoader(String fileName) {
         this.fileName =  fileName;
     }
 
     @Override
-    public List<Measurement> load() throws IOException {
+    public List<Measurement> load() throws FileNotFoundException {
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(fileName).getFile());
+        File file = new File(Objects.requireNonNull(classLoader.getResource(fileName)).getFile());
         String absolutePath = file.getAbsolutePath();
 
         List<Measurement> measurementsList = new ArrayList<>();
