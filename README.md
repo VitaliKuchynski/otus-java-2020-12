@@ -1,1 +1,1 @@
-# otus-java-homework
+# ru.ru.otus-java-homework

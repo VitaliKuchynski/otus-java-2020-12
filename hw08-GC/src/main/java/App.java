@@ -17,7 +17,7 @@ public class App {
         long beginTime = System.currentTimeMillis();
 
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-        ObjectName objName = new ObjectName("ru.otus:type=Generator");
+        ObjectName objName = new ObjectName("ru.ru.ru.otus:type=Generator");
         mBeanServer.registerMBean(generator, objName);
 
         generator.generateOOM();

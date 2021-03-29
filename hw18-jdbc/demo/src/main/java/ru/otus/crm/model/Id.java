@@ -1,4 +1,4 @@
-package ru.otus.reflection.annotations;
+package ru.otus.crm.model;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,6 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface Test {
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.METHOD })
+public @interface Id {
 }
