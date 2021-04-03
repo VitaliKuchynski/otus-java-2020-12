@@ -64,7 +64,7 @@ public class Client implements Cloneable {
         this.id = id;
     }
 
-    public java.lang.String getName() {
+    public String getName() {
         return name;
     }
 

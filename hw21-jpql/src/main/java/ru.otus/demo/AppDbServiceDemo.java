@@ -36,14 +36,14 @@ public class AppDbServiceDemo {
         var clientTemplate = new DataTemplateHibernate<>(Client.class);
 
         var addressTemplate = new DataTemplateHibernate<>(Address.class);
-
-        var phoneTemplate = new DataTemplateHibernate<>(Phone.class);
+//
+//        var phoneTemplate = new DataTemplateHibernate<>(Phone.class);
 
 ///
 
-        var dbServicePhone = new DBServicePhoneImpl(transactionManager, phoneTemplate);
-        var firstPhone = dbServicePhone.saveEntity(new Phone("87873648284", new Client("Grisha")));
-        dbServicePhone.findAll().forEach(phone -> log. info(" >>>>>>>>>>>> phone:{}", phone));
+//        var dbServicePhone = new DBServicePhoneImpl(transactionManager, phoneTemplate);
+//        var firstPhone = dbServicePhone.saveEntity(new Phone("87873648284", new Client("Grisha")));
+//        dbServicePhone.findAll().forEach(phone -> log. info(" >>>>>>>>>>>> phone:{}", phone));
 
 
 
@@ -57,12 +57,12 @@ public class AppDbServiceDemo {
         phones.add(new Phone("777777777", clnt));
         clnt.setPhoneDataSet(phones);
         clnt.setAddress(new Address("Green str", clnt));
-        var clienSecond = dbServiceClient.saveEntity(clnt);
-        log. info("..>>>>>>>>>>>>>>>>>>>>>> client:{}:", clienSecond);
+        var clientFirst = dbServiceClient.saveEntity(clnt);
+        log. info("..>>>>>>>>>>>>>>>>>>>>>> client:{}: ", clientFirst);
 
 //
-        var clientSecondSelected = dbServiceClient.getEntity(clienSecond.getId())
-                .orElseThrow(() -> new RuntimeException("Client not found, id:" + clienSecond.getId()));
+        var clientSecondSelected = dbServiceClient.getEntity(clientFirst.getId())
+                .orElseThrow(() -> new RuntimeException("Client not found, id:" + clientFirst.getId()));
         log.info("clientSecondSelected:{}", clientSecondSelected);
 
         clientSecondSelected.setAddress(new Address(clientSecondSelected.getAddress().getId(),"Blue line", clientSecondSelected));

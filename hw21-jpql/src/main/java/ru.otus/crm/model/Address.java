@@ -14,8 +14,7 @@ public class Address implements Cloneable {
     @Column(name = "street")
     private String street;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_id")
+    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
     private Client client;
 
     public Address() {
