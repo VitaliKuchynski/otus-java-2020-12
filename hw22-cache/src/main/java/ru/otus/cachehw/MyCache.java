@@ -13,7 +13,7 @@ public class MyCache<K, V> implements HwCache<K, V> {
 
     private final Map<K, V> cache = new WeakHashMap<>();
 
-    private final List<HwListener> listeners = new ArrayList<>();
+    private final List<HwListener<K, V>> listeners = new ArrayList<>();
 
     @Override
     public void put(K key, V value) {
@@ -38,10 +38,7 @@ public class MyCache<K, V> implements HwCache<K, V> {
 
         listenEvent(key, cache.get(key), "GET");
 
-        if (cache.containsKey(key)) {
            return cache.get(key);
-        }
-        return null;
     }
 
     @Override
@@ -57,7 +54,12 @@ public class MyCache<K, V> implements HwCache<K, V> {
     private void listenEvent(K key, V value, String action){
 
         for (HwListener listener : listeners){
-             listener.notify(key, value, action);
+
+            try {
+                listener.notify(key, value, action);
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }

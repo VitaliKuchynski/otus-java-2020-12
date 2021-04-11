@@ -53,6 +53,7 @@ public class DbServiceClientImpl implements DBService<Client> {
 
         return transactionManager.doInTransaction(session -> {
             var clientOptional = clientDataTemplate.findById(session, id);
+            cache.put(id, clientOptional.get());
             log.info("client: {}", clientOptional);
             return clientOptional;
         });
