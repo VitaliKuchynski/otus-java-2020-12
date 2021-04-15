@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class UsersServlet extends HttpServlet {
 
-    private static final String USERS_PAGE_TEMPLATE = "users.html";
+    private static final String USERS_PAGE_TEMPLATE = "admin.html";
     private static final String TEMPLATE_ATTR_RANDOM_USER = "randomUser";
 
     private final UserDao userDao;
