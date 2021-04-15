@@ -1,0 +1,16 @@
+ru/otus/dataprocessor/Processor.java
+ ru.otus.dataprocessor.Processor
+ru/otus/dataprocessor/FileProcessException.java
+ ru.otus.dataprocessor.FileProcessException
+ru/otus/dataprocessor/FileLoader.java
+ ru.otus.dataprocessor.FileLoader
+ru/otus/model/Measurement.java
+ ru.otus.model.Measurement
+ru/otus/dataprocessor/Loader.java
+ ru.otus.dataprocessor.Loader
+ru/otus/dataprocessor/FileSerializer.java
+ ru.otus.dataprocessor.FileSerializer
+ru/otus/dataprocessor/Serializer.java
+ ru.otus.dataprocessor.Serializer
+ru/otus/dataprocessor/ProcessorAggregator.java
+ ru.otus.dataprocessor.ProcessorAggregator

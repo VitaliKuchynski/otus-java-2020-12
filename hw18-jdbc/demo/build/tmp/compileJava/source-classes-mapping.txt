@@ -1,0 +1,35 @@
+ru/otus/core/sessionmanager/DataBaseOperationException.java
+ ru.otus.core.sessionmanager.DataBaseOperationException
+ru/otus/core/sessionmanager/TransactionManager.java
+ ru.otus.core.sessionmanager.TransactionManager
+ru/otus/crm/repository/ClientDataTemplateJdbc.java
+ ru.otus.crm.repository.ClientDataTemplateJdbc
+ru/otus/demo/DbServiceDemo.java
+ ru.otus.demo.DbServiceDemo
+ru/otus/core/sessionmanager/TransactionAction.java
+ ru.otus.core.sessionmanager.TransactionAction
+ru/otus/crm/datasource/DriverManagerDataSource.java
+ ru.otus.crm.datasource.DriverManagerDataSource
+ru/otus/crm/service/DbServiceClientImpl.java
+ ru.otus.crm.service.DbServiceClientImpl
+ru/otus/core/repository/DataTemplate.java
+ ru.otus.core.repository.DataTemplate
+ru/otus/core/repository/DataTemplateException.java
+ ru.otus.core.repository.DataTemplateException
+ru/otus/core/repository/executor/DbExecutor.java
+ ru.otus.core.repository.executor.DbExecutor
+ru/otus/core/sessionmanager/TransactionManagerJdbc.java
+ ru.otus.core.sessionmanager.TransactionManagerJdbc
+ ru.otus.core.sessionmanager.TransactionManagerJdbc$1
+ru/otus/crm/model/Id.java
+ ru.otus.crm.model.Id
+ru/otus/demo/ExecutorDemo.java
+ ru.otus.demo.ExecutorDemo
+ru/otus/crm/model/Client.java
+ ru.otus.crm.model.Client
+ru/otus/core/repository/executor/DbExecutorImpl.java
+ ru.otus.core.repository.executor.DbExecutorImpl
+ru/otus/demo/JdbcDemo.java
+ ru.otus.demo.JdbcDemo
+ru/otus/crm/service/DBServiceClient.java
+ ru.otus.crm.service.DBServiceClient
