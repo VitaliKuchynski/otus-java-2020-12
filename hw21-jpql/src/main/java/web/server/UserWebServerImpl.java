@@ -7,12 +7,12 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import web.dao.UserDao;
+import ru.otus.crm.service.DbServiceClientImpl;
 import web.helpers.FileSystemHelper;
 import web.servlet.AuthorizationFilter;
 import web.servlet.LoginServlet;
 import web.servlet.UsersApiServlet;
-import web.servlet.UsersServlet;
+import web.servlet.AdminServlet;
 import web.webServices.TemplateProcessor;
 import web.webServices.UserAuthService;
 import com.google.gson.Gson;
@@ -25,12 +25,13 @@ public class UserWebServerImpl implements UserWebServer {
 
     private final Server server;
     private final UserAuthService authService;
-    private final UserDao userDao;
     protected final TemplateProcessor templateProcessor;
     private final Gson gson;
+    private DbServiceClientImpl dbServiceClient;
 
-    public UserWebServerImpl(int port, UserAuthService authService, UserDao userDao, Gson gson, TemplateProcessor templateProcessor) {
-        this.userDao = userDao;
+
+    public UserWebServerImpl(int port, UserAuthService authService, DbServiceClientImpl dbServiceClient, Gson gson, TemplateProcessor templateProcessor) {
+        this.dbServiceClient = dbServiceClient;
         this.gson = gson;
         this.templateProcessor = templateProcessor;
         this.authService = authService;
@@ -56,7 +57,6 @@ public class UserWebServerImpl implements UserWebServer {
     @Override
     public void stop() throws Exception {
         server.stop();
-
     }
 
     private Server initContext() {
@@ -66,7 +66,7 @@ public class UserWebServerImpl implements UserWebServer {
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(resourceHandler);
-        handlers.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*"));
+        handlers.addHandler(applySecurity(servletContextHandler, "/admin", "/api/user/*"));
 
 
         server.setHandler(handlers);
@@ -83,8 +83,8 @@ public class UserWebServerImpl implements UserWebServer {
 
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, userDao)), "/users");
-        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(userDao, gson)), "/api/user/*");
+        servletContextHandler.addServlet(new ServletHolder(new AdminServlet(templateProcessor, dbServiceClient)), "/admin");
+        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceClient, gson)), "/api/user/*");
         return servletContextHandler;
     }
 

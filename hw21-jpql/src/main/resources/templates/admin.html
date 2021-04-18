@@ -3,8 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
+
+    <script>
+        function getUserById() {
+            const userIdTextBox = document.getElementById('userIdTextBox');
+            const userDataContainer = document.getElementById('userDataContainer');
+            const id = userIdTextBox.value;
+            //fetch('api/user?id=' + id)
+            fetch('api/user/' + id)
+                .then(response => response.json())
+                .then(client => userDataContainer.innerHTML = JSON.stringify(client))
+                .catch(err => userDataContainer.innerHTML = 'Error!!');
+        }
+    </script>
+
 </head>
 <body>
+
+<h2>Create user</h2>
+
+<form action="admin" method="post">
+    <input type="text" id = "addUserName" value="" placeholder="Enter Name" name="name">
+    <input type="text" id = "addUserAddress" value="" placeholder="Enter Address" name="address">
+    <input type="text" id = "addUserPhone" value="" placeholder="Enter Phone" name="phone">
+    <button type="submit">Create user</button>
+</form>
+
+
+<h2>Get user</h2>
+<input type="text" id = "userIdTextBox" value="" placeholder="Enter id">
+<button onclick="getUserById()">Get user</button>
+<pre id = "userDataContainer"></pre>
 
 </body>
 </html>

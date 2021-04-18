@@ -5,9 +5,8 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import web.dao.UserDao;
-import web.model.User;
-
+import ru.otus.crm.model.Client;
+import ru.otus.crm.service.DbServiceClientImpl;
 
 import java.io.IOException;
 
@@ -16,21 +15,22 @@ public class UsersApiServlet extends HttpServlet {
 
     private static final int ID_PATH_PARAM_POSITION = 1;
 
-    private final UserDao userDao;
+    private DbServiceClientImpl dbServiceClient;
     private final Gson gson;
 
-    public UsersApiServlet(UserDao userDao, Gson gson) {
-        this.userDao = userDao;
+    public UsersApiServlet(DbServiceClientImpl dbServiceClient, Gson gson) {
+        this.dbServiceClient = dbServiceClient;
         this.gson = gson;
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user = userDao.findById(extractIdFromRequest(request)).orElse(null);
 
-        response.setContentType("application/json;charset=UTF-8");
-        ServletOutputStream out = response.getOutputStream();
-        out.print(gson.toJson(user));
+      Client client = dbServiceClient.getEntity(extractIdFromRequest(request)).orElse(null);
+
+      response.setContentType("application/json;charset=UTF-8");
+      ServletOutputStream out = response.getOutputStream();
+      out.print(gson.toJson(client.toString()));
     }
 
     private long extractIdFromRequest(HttpServletRequest request) {

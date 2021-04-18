@@ -1,5 +1,5 @@
-web/model/User.java
- web.model.User
+ru.otus/core/sessionmanager/TransactionAction.java
+ ru.otus.core.sessionmanager.TransactionAction
 web/server/UserWebServer.java
  web.server.UserWebServer
 ru.otus/crm/service/DBServiceAddressImpl.java
@@ -12,8 +12,6 @@ web/webServices/UserAuthServiceImpl.java
  web.webServices.UserAuthServiceImpl
 web/helpers/FileSystemHelper.java
  web.helpers.FileSystemHelper
-ru.otus/core/sessionmanager/TransactionAction.java
- ru.otus.core.sessionmanager.TransactionAction
 ru.otus/crm/model/Address.java
  ru.otus.crm.model.Address
 ru.otus/crm/model/Phone.java
@@ -24,12 +22,14 @@ ru.otus/core/repository/DataTemplateException.java
  ru.otus.core.repository.DataTemplateException
 web/dao/InMemoryUserDao.java
  web.dao.InMemoryUserDao
+ru.otus/core/sessionmanager/DataBaseOperationException.java
+ ru.otus.core.sessionmanager.DataBaseOperationException
 web/servlet/AuthorizationFilter.java
  web.servlet.AuthorizationFilter
-web/webServices/UserAuthService.java
- web.webServices.UserAuthService
 ru.otus/crm/service/CacheHelper.java
  ru.otus.crm.service.CacheHelper
+web/webServices/UserAuthService.java
+ web.webServices.UserAuthService
 web/servlet/UsersApiServlet.java
  web.servlet.UsersApiServlet
 ru.otus/core/sessionmanager/TransactionManager.java
@@ -38,29 +38,29 @@ web/dao/UserDao.java
  web.dao.UserDao
 ru.otus/crm/dbmigrations/MigrationsExecutorFlyway.java
  ru.otus.crm.dbmigrations.MigrationsExecutorFlyway
-web/servlet/LoginServlet.java
- web.servlet.LoginServlet
 ru.otus/core/repository/DataTemplate.java
  ru.otus.core.repository.DataTemplate
+web/model/User.java
+ web.model.User
 ru.otus/demo/AppDbServiceDemo.java
  ru.otus.demo.AppDbServiceDemo
+ru.otus/crm/service/DBService.java
+ ru.otus.crm.service.DBService
 web/webServices/TemplateProcessorImpl.java
  web.webServices.TemplateProcessorImpl
 ru.otus/core/repository/HibernateUtils.java
  ru.otus.core.repository.HibernateUtils
-ru.otus/crm/service/DBService.java
- ru.otus.crm.service.DBService
-ru.otus/core/repository/DataTemplateHibernate.java
- ru.otus.core.repository.DataTemplateHibernate
 ru.otus/crm/service/DbServiceClientImpl.java
  ru.otus.crm.service.DbServiceClientImpl
+ru.otus/core/repository/DataTemplateHibernate.java
+ ru.otus.core.repository.DataTemplateHibernate
 web/webApp.java
  web.webApp
 ru.otus/core/sessionmanager/TransactionManagerHibernate.java
  ru.otus.core.sessionmanager.TransactionManagerHibernate
-ru.otus/core/sessionmanager/DataBaseOperationException.java
- ru.otus.core.sessionmanager.DataBaseOperationException
+web/servlet/LoginServlet.java
+ web.servlet.LoginServlet
 web/server/UserWebServerImpl.java
  web.server.UserWebServerImpl
-web/servlet/UsersServlet.java
- web.servlet.UsersServlet
+web/servlet/AdminServlet.java
+ web.servlet.AdminServlet
