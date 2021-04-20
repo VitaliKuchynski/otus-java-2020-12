@@ -1,6 +1,0 @@
-ru/otus/Generator.java
- ru.otus.Generator
-App.java
- App
-ru/otus/GeneratorMBean.java
- ru.otus.GeneratorMBean

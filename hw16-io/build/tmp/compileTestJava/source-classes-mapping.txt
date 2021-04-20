@@ -1,2 +1,0 @@
-ru/otus/dataprocessor/ProcessorTest.java
- ru.otus.dataprocessor.ProcessorTest

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ru.otus.dataprocessor.ProcessorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-04-15T03:28:46" hostname="DESKTOP-EGNEHSJ" time="0.199">
-  <properties/>
-  <testcase name="Из файла читается json, обрабатывается, результат сериализуется в строку" classname="ru.otus.dataprocessor.ProcessorTest" time="0.199"/>
-  <system-out><![CDATA[C:\Users\KVN\AppData\Local\Temp\junit12814890859787507345
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
