@@ -38,4 +38,5 @@ out
 *.iws
 *.ipr
 *.idea
+.idea
 .idea/compiler.xml

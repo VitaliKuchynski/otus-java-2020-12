@@ -1,12 +1,13 @@
 package ru.otus.appcontainer;
 
+import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
+import ru.otus.config.AppConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class AppComponentsContainerImpl implements AppComponentsContainer {
 
@@ -19,6 +20,26 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private void processConfig(Class<?> configClass) {
         checkConfigClass(configClass);
+        Method [] methods = configClass.getDeclaredMethods();
+
+        for (Method method: methods ) {
+          var annotationName = method.getAnnotation(AppComponent.class);
+//           for (AnnotatedType s:  method.getAnnotatedParameterTypes()) {
+//               // System.out.println(s.getType());
+//            }
+            //System.out.println(annotationName.name());
+
+
+            var o = method.getReturnType();
+            var interfaceClass = method.getGenericReturnType();
+            appComponents.add(o);
+            appComponents.add(interfaceClass);
+            System.out.println(o.getSimpleName());
+            System.out.println(interfaceClass);
+
+
+        }
+
         // You code here...
     }
 
@@ -36,5 +57,11 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     public <C> C getAppComponent(String componentName) {
         return null;
+    }
+
+
+    public static void main(String[] args) {
+        AppComponentsContainerImpl appComponentsContainer = new AppComponentsContainerImpl(AppConfig.class);
+
     }
 }

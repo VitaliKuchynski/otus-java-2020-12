@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/hw18-jdbc/homework" />
             <option value="$PROJECT_DIR$/hw21-jpql" />
             <option value="$PROJECT_DIR$/hw22-cache" />
+            <option value="$PROJECT_DIR$/hw25-Dependency-Injection" />
           </set>
         </option>
       </GradleProjectSettings>
