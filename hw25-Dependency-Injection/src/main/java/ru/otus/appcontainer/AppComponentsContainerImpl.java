@@ -3,9 +3,9 @@ package ru.otus.appcontainer;
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
-import ru.otus.config.AppConfig;
 
-import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -13,6 +13,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private final List<Object> appComponents = new ArrayList<>();
     private final Map<String, Object> appComponentsByName = new HashMap<>();
+    private final Deque <Method> methodWithoutParam = new ArrayDeque<>();
+    private final Deque <Method> methodsWithParam = new ArrayDeque<>();
 
     public AppComponentsContainerImpl(Class<?> initialConfigClass) {
         processConfig(initialConfigClass);
@@ -20,27 +22,75 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private void processConfig(Class<?> configClass) {
         checkConfigClass(configClass);
+        Object obj = createConfigInst(configClass);
         Method [] methods = configClass.getDeclaredMethods();
+        sortMethodsByParameters(methods);
+        invokeMethods(methodWithoutParam, obj);
+        invokeMethods(methodsWithParam, obj);
+    }
 
-        for (Method method: methods ) {
-          var annotationName = method.getAnnotation(AppComponent.class);
-//           for (AnnotatedType s:  method.getAnnotatedParameterTypes()) {
-//               // System.out.println(s.getType());
-//            }
-            //System.out.println(annotationName.name());
-
-
-            var o = method.getReturnType();
-            var interfaceClass = method.getGenericReturnType();
-            appComponents.add(o);
-            appComponents.add(interfaceClass);
-            System.out.println(o.getSimpleName());
-            System.out.println(interfaceClass);
-
-
+    @Override
+    public <C> C getAppComponent(Class<C> componentClass) {
+        String str = componentClass.getSimpleName();
+        for (Object component: appComponents) {
+            if (component.getClass().getSimpleName().contains(str)) {
+                return (C) component;
+            }
         }
+        throw new RuntimeException();
+    }
 
-        // You code here...
+    @Override
+    public <C> C getAppComponent(String componentName) {
+        if (appComponentsByName.containsKey(componentName)) {
+            return (C) appComponentsByName.get(componentName);
+        }
+        throw new RuntimeException();
+    }
+
+    private void sortMethodsByParameters(Method [] methods) {
+        for (Method method: methods) {
+            Class<?>[] methodParameters = method.getParameterTypes();
+
+            if (methodParameters.length == 0) {
+                methodWithoutParam.push(method);
+            } else {
+                methodsWithParam.push(method);
+            }
+        }
+    }
+
+    private void invokeMethods(Deque<Method> methods, Object obj) {
+
+        for (Method method : methods) {
+            var annotationName = method.getAnnotation(AppComponent.class).name();
+            var methodParameters = method.getParameterTypes();
+
+            try {
+                if (method.getParameterTypes().length == 0) {
+                    Object objCurr = method.invoke(obj);
+                    appComponentsByName.put(annotationName, objCurr);
+                    appComponents.add(objCurr);
+
+                } else if (methodParameters.length == 1) {
+                    Object objCurr = null;
+                    for (Object appComponent : appComponents) {
+                        if (appComponent.getClass().getSimpleName().contains(methodParameters[0].getSimpleName())) {
+                            objCurr = method.invoke(obj, appComponent);
+                            appComponentsByName.put(annotationName, objCurr);
+                        }
+                    }
+                    appComponents.add(objCurr);
+
+                } else {
+                    Object objCurr = method.invoke(obj, appComponents.get(0), appComponents.get(2), appComponents.get(1));
+                    appComponentsByName.put(annotationName, objCurr);
+                    appComponents.add(objCurr);
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void checkConfigClass(Class<?> configClass) {
@@ -49,19 +99,12 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         }
     }
 
-    @Override
-    public <C> C getAppComponent(Class<C> componentClass) {
-        return null;
-    }
-
-    @Override
-    public <C> C getAppComponent(String componentName) {
-        return null;
-    }
-
-
-    public static void main(String[] args) {
-        AppComponentsContainerImpl appComponentsContainer = new AppComponentsContainerImpl(AppConfig.class);
-
+    private Object createConfigInst(Class<?> configClass){
+        try {
+            Constructor constructor = configClass.getConstructor();
+            return constructor.newInstance((Object[]) null);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            return e;
+        }
     }
 }
