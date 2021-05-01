@@ -7,33 +7,31 @@ import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private final List<Object> appComponents = new ArrayList<>();
     private final Map<String, Object> appComponentsByName = new HashMap<>();
-    private final Deque <Method> methodWithoutParam = new ArrayDeque<>();
-    private final Deque <Method> methodsWithParam = new ArrayDeque<>();
 
-    public AppComponentsContainerImpl(Class<?> initialConfigClass) {
+    public AppComponentsContainerImpl(Class<?> initialConfigClass) throws InvocationTargetException, IllegalAccessException {
         processConfig(initialConfigClass);
     }
 
-    private void processConfig(Class<?> configClass) {
+    private void processConfig(Class<?> configClass) throws InvocationTargetException, IllegalAccessException {
         checkConfigClass(configClass);
-        Object obj = createConfigInst(configClass);
-        Method [] methods = configClass.getDeclaredMethods();
-        sortMethodsByParameters(methods);
-        invokeMethods(methodWithoutParam, obj);
-        invokeMethods(methodsWithParam, obj);
+        Object obj = createConfigInstants(configClass);
+        Method[] methods = configClass.getDeclaredMethods();
+        invokeMethods(getSortedMethods(methods), obj);
     }
 
     @Override
     public <C> C getAppComponent(Class<C> componentClass) {
-        String str = componentClass.getSimpleName();
-        for (Object component: appComponents) {
-            if (component.getClass().getSimpleName().contains(str)) {
+        for (Object component : appComponents) {
+            if (componentClass.isInstance(component)) {
                 return (C) component;
             }
         }
@@ -48,63 +46,75 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         throw new RuntimeException();
     }
 
-    private void sortMethodsByParameters(Method [] methods) {
-        for (Method method: methods) {
-            Class<?>[] methodParameters = method.getParameterTypes();
-
-            if (methodParameters.length == 0) {
-                methodWithoutParam.push(method);
-            } else {
-                methodsWithParam.push(method);
-            }
-        }
-    }
-
-    private void invokeMethods(Deque<Method> methods, Object obj) {
-
-        for (Method method : methods) {
-            var annotationName = method.getAnnotation(AppComponent.class).name();
-            var methodParameters = method.getParameterTypes();
-
-            try {
-                if (method.getParameterTypes().length == 0) {
-                    Object objCurr = method.invoke(obj);
-                    appComponentsByName.put(annotationName, objCurr);
-                    appComponents.add(objCurr);
-
-                } else if (methodParameters.length == 1) {
-                    Object objCurr = null;
-                    for (Object appComponent : appComponents) {
-                        if (appComponent.getClass().getSimpleName().contains(methodParameters[0].getSimpleName())) {
-                            objCurr = method.invoke(obj, appComponent);
-                            appComponentsByName.put(annotationName, objCurr);
-                        }
-                    }
-                    appComponents.add(objCurr);
-
-                } else {
-                    Object objCurr = method.invoke(obj, appComponents.get(0), appComponents.get(2), appComponents.get(1));
-                    appComponentsByName.put(annotationName, objCurr);
-                    appComponents.add(objCurr);
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void checkConfigClass(Class<?> configClass) {
         if (!configClass.isAnnotationPresent(AppComponentsContainerConfig.class)) {
             throw new IllegalArgumentException(String.format("Given class is not config %s", configClass.getName()));
         }
     }
 
-    private Object createConfigInst(Class<?> configClass){
+    private Object createConfigInstants(Class<?> configClass) {
         try {
             Constructor constructor = configClass.getConstructor();
-            return constructor.newInstance((Object[]) null);
+            return constructor.newInstance(null);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             return e;
+        }
+    }
+
+    private Map<Integer, ArrayList<Method>> getSortedMethods(Method[] methods) {
+
+        Map<Integer, ArrayList<Method>> methodsListSortedByOrder = new HashMap<>();
+
+        for (Method method : methods) {
+            var annotationOrder = method.getAnnotation(AppComponent.class).order();
+            if (!methodsListSortedByOrder.containsKey(annotationOrder)) {
+                ArrayList<Method> newMethodsList = new ArrayList<>();
+                newMethodsList.add(method);
+                methodsListSortedByOrder.put(annotationOrder, newMethodsList);
+            } else {
+                ArrayList<Method> currentMethodsList = methodsListSortedByOrder.get(annotationOrder);
+                currentMethodsList.add(method);
+                methodsListSortedByOrder.replace(annotationOrder, currentMethodsList);
+            }
+        }
+        return methodsListSortedByOrder;
+    }
+
+    private void invokeMethods(Map<Integer, ArrayList<Method>> sortedMethods, Object obj) throws InvocationTargetException, IllegalAccessException {
+
+        for (Integer i : sortedMethods.keySet()) {
+            ArrayList<Method> currentMethods = sortedMethods.get(i);
+            for (Method method : currentMethods) {
+                invokeMethod(method, obj);
+            }
+        }
+    }
+
+    private void invokeMethod(Method method, Object obj) throws InvocationTargetException, IllegalAccessException {
+
+        var annotationName = method.getAnnotation(AppComponent.class).name();
+        var methodParameters = method.getParameterTypes();
+
+        if (methodParameters.length == 0) {
+            Object objCurr = method.invoke(obj);
+            appComponentsByName.put(annotationName, objCurr);
+            appComponents.add(objCurr);
+        } else {
+            Object[] objects = new Object[methodParameters.length];
+
+            for (int i = 0; i < methodParameters.length; i++) {
+
+                var currentType = methodParameters[i];
+
+                for (Object o : appComponents) {
+                    if (currentType.isInstance(o)) {
+                        objects[i] = o;
+                    }
+                }
+            }
+            Object objCurr = method.invoke(obj, objects);
+            appComponentsByName.put(annotationName, objCurr);
+            appComponents.add(objCurr);
         }
     }
 }
