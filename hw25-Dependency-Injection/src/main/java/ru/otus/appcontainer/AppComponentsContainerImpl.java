@@ -17,11 +17,11 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     private final List<Object> appComponents = new ArrayList<>();
     private final Map<String, Object> appComponentsByName = new HashMap<>();
 
-    public AppComponentsContainerImpl(Class<?> initialConfigClass) throws InvocationTargetException, IllegalAccessException {
+    public AppComponentsContainerImpl(Class<?> initialConfigClass) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         processConfig(initialConfigClass);
     }
 
-    private void processConfig(Class<?> configClass) throws InvocationTargetException, IllegalAccessException {
+    private void processConfig(Class<?> configClass) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         checkConfigClass(configClass);
         Object obj = createConfigInstants(configClass);
         Method[] methods = configClass.getDeclaredMethods();
@@ -48,31 +48,27 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private void checkConfigClass(Class<?> configClass) {
         if (!configClass.isAnnotationPresent(AppComponentsContainerConfig.class)) {
-            throw new IllegalArgumentException(String.format("Given class is not config %s", configClass.getName()));
+            throw new IllegalArgumentException(String.format("Given class is not ru.otus.config %s", configClass.getName()));
         }
     }
 
-    private Object createConfigInstants(Class<?> configClass) {
-        try {
-            Constructor constructor = configClass.getConstructor();
-            return constructor.newInstance(null);
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            return e;
-        }
+    private Object createConfigInstants(Class<?> configClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+            Constructor<?> constructor = configClass.getConstructor();
+            return constructor.newInstance();
     }
 
-    private Map<Integer, ArrayList<Method>> getSortedMethods(Method[] methods) {
+    private Map<Integer, List<Method>> getSortedMethods(Method[] methods) {
 
-        Map<Integer, ArrayList<Method>> methodsListSortedByOrder = new HashMap<>();
+        Map<Integer, List<Method>> methodsListSortedByOrder = new HashMap<>();
 
         for (Method method : methods) {
             var annotationOrder = method.getAnnotation(AppComponent.class).order();
             if (!methodsListSortedByOrder.containsKey(annotationOrder)) {
-                ArrayList<Method> newMethodsList = new ArrayList<>();
+                List<Method> newMethodsList = new ArrayList<>();
                 newMethodsList.add(method);
                 methodsListSortedByOrder.put(annotationOrder, newMethodsList);
             } else {
-                ArrayList<Method> currentMethodsList = methodsListSortedByOrder.get(annotationOrder);
+                List<Method> currentMethodsList = methodsListSortedByOrder.get(annotationOrder);
                 currentMethodsList.add(method);
                 methodsListSortedByOrder.replace(annotationOrder, currentMethodsList);
             }
@@ -80,10 +76,10 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         return methodsListSortedByOrder;
     }
 
-    private void invokeMethods(Map<Integer, ArrayList<Method>> sortedMethods, Object obj) throws InvocationTargetException, IllegalAccessException {
+    private void invokeMethods(Map<Integer, List<Method>> sortedMethods, Object obj) throws InvocationTargetException, IllegalAccessException {
 
         for (Integer i : sortedMethods.keySet()) {
-            ArrayList<Method> currentMethods = sortedMethods.get(i);
+            List<Method> currentMethods = sortedMethods.get(i);
             for (Method method : currentMethods) {
                 invokeMethod(method, obj);
             }
@@ -94,27 +90,15 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
         var annotationName = method.getAnnotation(AppComponent.class).name();
         var methodParameters = method.getParameterTypes();
-
-        if (methodParameters.length == 0) {
-            Object objCurr = method.invoke(obj);
-            appComponentsByName.put(annotationName, objCurr);
-            appComponents.add(objCurr);
-        } else {
-            Object[] objects = new Object[methodParameters.length];
+        Object[] objects = new Object[methodParameters.length];
 
             for (int i = 0; i < methodParameters.length; i++) {
-
                 var currentType = methodParameters[i];
-
-                for (Object o : appComponents) {
-                    if (currentType.isInstance(o)) {
-                        objects[i] = o;
-                    }
-                }
+                objects[i] = getAppComponent(currentType);
             }
+
             Object objCurr = method.invoke(obj, objects);
             appComponentsByName.put(annotationName, objCurr);
             appComponents.add(objCurr);
-        }
     }
 }
