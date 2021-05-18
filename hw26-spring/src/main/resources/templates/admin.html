@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+
+    <script>
+        function getClient(url, userIdTextBox) {
+            const valueControl = document.getElementById(userIdTextBox);
+            const clientDataContainer = document.getElementById('userDataContainer');
+            const fullUrl = url + (valueControl? (encodeURIComponent(valueControl.value)) : '');
+            fetch(fullUrl)
+                .then(response => response.json())
+                .then(client => clientDataContainer.innerHTML = JSON.stringify(client));
+        }
+    </script>
+</head>
+<body>
+
+<h2>Create user</h2>
+
+<form action="/client/save" method="post">
+    <input type="text" id = "addUserName" value="" placeholder="Enter Name" name="name">
+    <input type="text" id = "addUserAddress" value="" placeholder="Enter Address" name="address">
+    <input type="text" id = "addUserPhone" value="" placeholder="Enter Phone" name="phone">
+    <button type="submit">Create user</button>
+</form>
+
+
+<h2>Get user</h2>
+<input type="text" id = "userIdTextBox" value="" placeholder="Enter id">
+<button onclick="getClient('api/client/','userIdTextBox')">Get user</button>
+<pre id = "userDataContainer"></pre>
+
+</body>
+</html>
