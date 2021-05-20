@@ -19,7 +19,6 @@ public class PrintNumbers implements Runnable {
         synchronized (this) {
             for (int i = 0; i < num.length; i++) {
                 notify();
-                sleep();
                 System.out.println(Thread.currentThread().getName() + " # " + num[i]);
                 try {
                     wait(100);
@@ -29,7 +28,6 @@ public class PrintNumbers implements Runnable {
             }
             for (int i = num.length - 1; i >= 0; i--) {
                 notify();
-                sleep();
                 System.out.println(Thread.currentThread().getName() + " # " + num[i]);
                 try {
                     wait(100);
