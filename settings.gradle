@@ -13,3 +13,5 @@ include 'hw21-jpql'
 include 'hw22-cache'
 include 'hw25-Dependency-Injection'
 include 'hw26-spring'
+include 'hw31-threads'
+

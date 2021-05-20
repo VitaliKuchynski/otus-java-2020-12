@@ -29,6 +29,9 @@ hs_err_pid*
 .gradle
 /buildSrc/.gradle/
 buildSrc/.gradle
+buildSrc/build
+buildSrc/.gradle/6.7
+buildSrc
 # Ignore Gradle build output directory
 build
 out
